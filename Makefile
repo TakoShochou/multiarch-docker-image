@@ -41,6 +41,7 @@ docker.push:
 		${REGISTRY}/${VENDOR}/${NAME}:latest \
 		--amend ${REGISTRY}/${VENDOR}/${NAME}:amd64 \
 		--amend ${REGISTRY}/${VENDOR}/${NAME}:arm64
+	docker manifest annotate ${REGISTRY}/${VENDOR}/${NAME}:latest ${REGISTRY}/${VENDOR}/${NAME}:arm64 --variant v8 --arch arm64
 	docker manifest push --purge ${REGISTRY}/${VENDOR}/${NAME}:latest
 	docker pull ${REGISTRY}/${VENDOR}/${NAME}:latest
 
@@ -56,3 +57,11 @@ docker.clean:
 		${REGISTRY}/${VENDOR}/${NAME}:latest \
 		${REGISTRY}/${VENDOR}/${NAME}:amd64 \
 		${REGISTRY}/${VENDOR}/${NAME}:arm64
+
+.PHONY: docker.run
+docker.run:
+	docker run --rm ${REGISTRY}/${VENDOR}/${NAME}:latest
+
+.PHONY: docker.image
+docker.image:
+	docker manifest inspect ${REGISTRY}/${VENDOR}/${NAME}:latest
